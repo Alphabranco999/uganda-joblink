@@ -3,6 +3,9 @@
 <head>
     <title>Uganda JobLink</title>
 
+    <!-- Ad Network Script -->
+    <script src="https://pl29610712.effectivecpmnetwork.com/de/ca/e2/decae23d288991dc4b5a079cbb609bca.js"></script>
+
     <style>
         body {
             margin: 0;
@@ -20,10 +23,9 @@
             margin-bottom: 80px;
             font-size: 80px;
             font-weight: bold;
-            opacity: 0; /* start invisible */
+            opacity: 0;
         }
 
-        /* Zoom-in animation */
         @keyframes zoomIn {
             0% {
                 transform: scale(0.2);
@@ -56,7 +58,7 @@
 </head>
 
 <body>
-    
+
     <h1 id="title">Uganda JobsLink</h1>
 
     <button onclick="document.location='index2.html'">OPEN</button>
@@ -65,7 +67,6 @@
         window.onload = () => {
             const title = document.getElementById("title");
 
-            // Add animation class after a short delay
             setTimeout(() => {
                 title.classList.add("animate-title");
             }, 200);
