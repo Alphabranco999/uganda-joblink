@@ -1,358 +1,826 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Worker Registration - Joblink Uganda</title>
-
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #eef2f7;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Worker registration form for Joblink Uganda." />
+  <title>Joblink Uganda | Worker Registration</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fbff;
+      --text: #12233d;
+      --muted: #617086;
+      --line: #dae5f1;
+      --primary: #1957d2;
+      --primary-dark: #0d3c98;
+      --accent: #10b981;
+      --danger: #d94a4a;
+      --warning: #f59e0b;
+      --shadow: 0 18px 44px rgba(14, 30, 64, 0.12);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --max: 1120px;
     }
 
-    header {
-        background: #0057b7;
-        padding: 20px;
-        text-align: center;
-        color: white;
-        font-size: 22px;
-        font-weight: bold;
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(25, 87, 210, 0.08), transparent 28%),
+        radial-gradient(circle at top right, rgba(16, 185, 129, 0.06), transparent 18%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      background: #0c2149;
+      color: #d8e6ff;
+      padding: 10px 18px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(218, 229, 241, 0.9);
     }
 
     .container {
-        width: 92%;
-        max-width: 650px;
-        margin: 20px auto;
-        background: white;
-        padding: 25px;
-        border-radius: 16px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-        flex: 1;
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
     }
 
-    label {
-        font-weight: bold;
-        color: #0057b7;
-        display: block;
-        margin-top: 18px;
-        font-size: 16px;
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0;
     }
 
-    input, select {
-        width: 100%;
-        padding: 12px;
-        margin-top: 6px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-        background: #f9f9f9;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #0c2149;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: 20px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #4b8dff);
+      color: white;
+      box-shadow: 0 12px 22px rgba(25, 87, 210, 0.24);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-actions a,
+    .btn,
+    button {
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s ease;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .btn-secondary {
+      background: #eef4fb;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #4b8dff);
+      color: white;
+      box-shadow: 0 14px 24px rgba(25, 87, 210, 0.22);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--accent), #2cd49a);
+      color: #06291d;
+      box-shadow: 0 14px 24px rgba(16, 185, 129, 0.22);
+    }
+
+    .nav-actions a:hover,
+    .btn:hover,
+    button:hover { transform: translateY(-2px); }
+
+    main {
+      padding: 28px 0 44px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .panel,
+    .form-card,
+    .section-card,
+    .side-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 34px;
+      background:
+        linear-gradient(145deg, rgba(25, 87, 210, 0.05), rgba(16, 185, 129, 0.04)),
+        var(--surface);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #eaf1ff;
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      color: #0b1f47;
+    }
+
+    .panel p,
+    .side-card p,
+    .section-help,
+    .note,
+    .toast p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .mini-stat {
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 24px;
+      color: #133877;
+      margin-bottom: 6px;
+    }
+
+    .mini-stat span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .side-card {
+      padding: 24px;
+    }
+
+    .side-card h3,
+    .section-card h2,
+    .toast strong {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #0c224a;
+      letter-spacing: -0.02em;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .check-list span {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+      font-weight: 600;
+      color: #23406c;
+      font-size: 14px;
+    }
+
+    .form-card {
+      padding: 24px;
+    }
+
+    .section-card {
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .section-help {
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field label {
+      display: block;
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #17325e;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      border-radius: 14px;
+      padding: 14px 15px;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      font-family: inherit;
+    }
+
+    .field textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(25, 87, 210, 0.55);
+      box-shadow: 0 0 0 4px rgba(25, 87, 210, 0.12);
+      background: white;
+    }
+
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
     }
 
     .job-category {
-        margin-top: 25px;
-        padding: 18px;
-        background: #f5f7fc;
-        border-radius: 14px;
-        border-left: 6px solid #0057b7;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      background: var(--surface-soft);
     }
 
-    .job-category h4 {
-        margin: 0 0 14px 0;
-        color: #0057b7;
-        font-size: 19px;
-        font-weight: bold;
+    .job-category h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      color: #0c224a;
     }
 
     .job-list {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .job-item {
-        background: white;
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px solid #d9d9d9;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 15px;
+      position: relative;
     }
 
     .job-item input {
-        width: 18px;
-        height: 18px;
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .submit-btn {
-        margin-top: 35px;
-        width: 100%;
-        background: #0057b7;
-        color: white;
-        padding: 16px;
-        border: none;
-        border-radius: 10px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
+    .job-item span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #d7e1ee;
+      color: #23406c;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.2s ease;
     }
 
-    .submit-btn:hover {
-        background: #004a9c;
+    .job-item input:checked + span {
+      background: #eaf1ff;
+      border-color: rgba(25, 87, 210, 0.55);
+      color: var(--primary-dark);
+      box-shadow: 0 8px 16px rgba(25, 87, 210, 0.1);
     }
 
-    .bottom-back {
-        background: #0057b7;
-        color: white;
-        padding: 18px;
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        text-decoration: none;
-        display: block;
-        border-radius: 0;
-        margin-top: 30px;
+    .note {
+      margin-top: 14px;
+      margin-bottom: 0;
     }
 
-    .bottom-back:hover {
-        background: #004a9c;
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
     }
 
-    /* POPUPS */
-    #popupSuccess, #popupError {
-        display:none;
-        position:fixed;
-        top:0; left:0;
-        width:100%; height:100%;
-        background:white;
-        justify-content:center;
-        align-items:center;
-        z-index:9999;
+    .actions-bar .btn,
+    .actions-bar button {
+      min-width: 180px;
     }
 
-    #popupBoxSuccess, #popupBoxError {
-        background:#05e918;
-        padding:25px 35px;
-        border-radius:12px;
-        text-align:center;
-        font-size:22px;
-        color:white;
-        animation: pop 0.4s ease;
-        font-weight:bold;
+    .status {
+      margin-top: 18px;
+      display: none;
+      padding: 15px 16px;
+      border-radius: 16px;
+      font-weight: 700;
+      border: 1px solid transparent;
     }
 
-    #popupBoxError {
-        background:#e60d06;
+    .status.error {
+      display: block;
+      background: #fff3f3;
+      color: #9b2222;
+      border-color: #f0c9c9;
     }
 
-    @keyframes pop {
-        0% { transform: scale(0.5); opacity:0; }
-        100% { transform: scale(1); opacity:1; }
+    .status.success {
+      display: block;
+      background: #edf9f4;
+      color: #10694c;
+      border-color: #c8ebdc;
     }
-</style>
+
+    .toast-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 21, 47, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 50;
+    }
+
+    .toast {
+      width: min(560px, 100%);
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 26px 60px rgba(7, 21, 47, 0.28);
+      border: 1px solid var(--line);
+    }
+
+    .toast .pill {
+      display: inline-block;
+      background: #eaf7f2;
+      color: #0d704e;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .toast ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .toast-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    footer {
+      padding: 0 0 28px;
+    }
+
+    footer small {
+      display: block;
+      color: var(--muted);
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .grid.two,
+      .chip-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(var(--max), calc(100% - 18px)); }
+      .panel,
+      .form-card,
+      .section-card,
+      .side-card,
+      .toast { padding: 20px; border-radius: 22px; }
+      .nav-inner { align-items: start; flex-direction: column; }
+      .nav-actions,
+      .actions-bar,
+      .toast-actions { width: 100%; }
+      .nav-actions a,
+      .actions-bar .btn,
+      .actions-bar button,
+      .toast-actions button,
+      .toast-actions a { width: 100%; }
+      h1 { font-size: 36px; }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="topbar">Worker registration • Mobile friendly • Professional presentation</div>
 
-<header>Worker Registration</header>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="index2.html">
+        <span class="brand-mark">JL</span>
+        <span>Joblink Uganda</span>
+      </a>
+      <div class="nav-actions">
+        <a class="btn-secondary" href="index2.html">Back to home</a>
+        <a class="btn-primary" href="https://wa.me/256771759797" target="_blank" rel="noopener">WhatsApp help</a>
+      </div>
+    </div>
+  </header>
 
-<div class="container">
-
-    <label>Full Name</label>
-    <input id="name" type="text" placeholder="Enter your two names">
-
-    <label>Age</label>
-    <input id="age" type="number" placeholder="Enter your age">
-
-    <label>Telephone Number (+256)</label>
-    <input id="phone" type="tel" placeholder="+256 7XX XXX XXX">
-
-    <label>Emergency Contact (+256)</label>
-    <input id="emergency" type="tel" placeholder="+256 7XX XXX XXX">
-
-    <label>Location</label>
-    <input id="location" type="text" placeholder="Enter your district or town">
-
-    <label>Education Level</label>
-    <select id="education">
-        <option value="">Select education level</option>
-        <option>None</option>
-        <option>Primary</option>
-        <option>O-Level</option>
-        <option>A-Level</option>
-        <option>Certificate</option>
-        <option>Diploma</option>
-        <option>Degree</option>
-        <option>Masters</option>
-    </select>
-
-    <label>Do You Speak English?</label>
-    <select id="english">
-        <option value="">Choose option</option>
-        <option>Yes</option>
-        <option>No</option>
-        <option>A little</option>
-    </select>
-
-    <!-- JOB LIST (UNCHANGED) -->
-     <div class="job-category">
-        <h4>Hospitality & Service</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> Waiter / Waitress</label>
-            <label class="job-item"><input type="checkbox" class="job"> Cashier</label>
-            <label class="job-item"><input type="checkbox" class="job"> Receptionist</label>
-            <label class="job-item"><input type="checkbox" class="job"> Hotel Staff</label>
-            <label class="job-item"><input type="checkbox" class="job"> Barista</label>
-            <label class="job-item"><input type="checkbox" class="job"> Bartender</label>
-            <label class="job-item"><input type="checkbox" class="job"> Room Attendant</label>
-            <label class="job-item"><input type="checkbox" class="job"> Chef Assistant</label>
-            <label class="job-item"><input type="checkbox" class="job"> Maid</label>
+  <main class="container">
+    <section class="hero">
+      <div class="panel">
+        <div class="eyebrow">Worker registration form</div>
+        <h1>Show your skills clearly and professionally.</h1>
+        <p>
+          This improved worker form is cleaner, easier to complete and more aligned with international digital design standards.
+          Fill in your details, choose your work categories and submit your profile.
+        </p>
+        <div class="mini-grid">
+          <div class="mini-stat"><strong>Fast</strong><span>Simple layout that works well on phones</span></div>
+          <div class="mini-stat"><strong>Clear</strong><span>Better labels and grouped information</span></div>
+          <div class="mini-stat"><strong>Modern</strong><span>Polished design that feels more trustworthy</span></div>
         </div>
-    </div>
-    <div class="job-category">
-        <h4>Construction & Skilled Work</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> Builder</label>
-            <label class="job-item"><input type="checkbox" class="job"> Electrician</label>
-            <label class="job-item"><input type="checkbox" class="job"> Plumber</label>
-            <label class="job-item"><input type="checkbox" class="job"> Welder</label>
-            <label class="job-item"><input type="checkbox" class="job"> Carpenter</label>
-            <label class="job-item"><input type="checkbox" class="job"> Painter</label>
-            <label class="job-item"><input type="checkbox" class="job"> Mason</label>
-            <label class="job-item"><input type="checkbox" class="job"> Roofer</label>
-            <label class="job-item"><input type="checkbox" class="job"> Tiler</label>
-            <label class="job-item"><input type="checkbox" class="job"> Steel Fixer</label>
+      </div>
+      <div class="side-stack">
+        <aside class="side-card">
+          <h3>Before you submit</h3>
+          <p>Make sure your phone number is correct and select at least one job area that matches your skills.</p>
+          <div class="check-list">
+            <span>Use your full name</span>
+            <span>Choose the jobs you can actually do</span>
+            <span>Keep your location and availability accurate</span>
+          </div>
+        </aside>
+        <aside class="side-card">
+          <h3>Helpful note</h3>
+          <p>Your selected skills are summarized after submission so the profile is easier to review.</p>
+        </aside>
+      </div>
+    </section>
+
+    <form class="form-card" id="workerForm" novalidate>
+      <section class="section-card">
+        <h2>Personal information</h2>
+        <p class="section-help">Tell employers who you are and how to contact you.</p>
+        <div class="grid two">
+          <div class="field">
+            <label for="name">Full name</label>
+            <input id="name" type="text" placeholder="Enter your full name" required />
+          </div>
+          <div class="field">
+            <label for="age">Age</label>
+            <input id="age" type="number" min="18" max="80" placeholder="Enter your age" required />
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" type="tel" placeholder="+256 7XX XXX XXX" required />
+          </div>
+          <div class="field">
+            <label for="emergency">Emergency contact</label>
+            <input id="emergency" type="tel" placeholder="+256 7XX XXX XXX" required />
+          </div>
+          <div class="field">
+            <label for="location">Location</label>
+            <input id="location" type="text" placeholder="District, town or city" required />
+          </div>
+          <div class="field">
+            <label for="availability">Availability</label>
+            <select id="availability" required>
+              <option value="">Select availability</option>
+              <option>Immediately</option>
+              <option>Within 1 week</option>
+              <option>Within 2 weeks</option>
+              <option>Flexible</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="education">Education level</label>
+            <select id="education" required>
+              <option value="">Select education level</option>
+              <option>None</option>
+              <option>Primary</option>
+              <option>O-Level</option>
+              <option>A-Level</option>
+              <option>Certificate</option>
+              <option>Diploma</option>
+              <option>Degree</option>
+              <option>Master's</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="english">English level</label>
+            <select id="english" required>
+              <option value="">Choose option</option>
+              <option>Fluent</option>
+              <option>Good</option>
+              <option>Basic</option>
+              <option>Not yet</option>
+            </select>
+          </div>
         </div>
-    </div>
+      </section>
 
-    <div class="job-category">
-        <h4>Technical & Mechanical</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> Mechanic</label>
-            <label class="job-item"><input type="checkbox" class="job"> Driver</label>
-            <label class="job-item"><input type="checkbox" class="job"> Boda Rider</label>
-            <label class="job-item"><input type="checkbox" class="job"> IT Technician</label>
-            <label class="job-item"><input type="checkbox" class="job"> Phone Repair</label>
-            <label class="job-item"><input type="checkbox" class="job"> Computer Repair</label>
-            <label class="job-item"><input type="checkbox" class="job"> Solar Technician</label>
-            <label class="job-item"><input type="checkbox" class="job"> CCTV Installer</label>
+      <section class="section-card">
+        <h2>Job preferences</h2>
+        <p class="section-help">Choose one or more roles that best match your skills.</p>
+        <div class="chip-grid">
+          <div class="job-category">
+            <h3>Hospitality & service</h3>
+            <div class="job-list">
+              <label class="job-item"><input type="checkbox" class="job" value="Waiter / Waitress" /><span>Waiter / Waitress</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Cashier" /><span>Cashier</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Receptionist" /><span>Receptionist</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Hotel Staff" /><span>Hotel Staff</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Barista" /><span>Barista</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Bartender" /><span>Bartender</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Room Attendant" /><span>Room Attendant</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Chef Assistant" /><span>Chef Assistant</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Maid" /><span>Maid</span></label>
+            </div>
+          </div>
+
+          <div class="job-category">
+            <h3>Construction & skilled work</h3>
+            <div class="job-list">
+              <label class="job-item"><input type="checkbox" class="job" value="Builder" /><span>Builder</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Electrician" /><span>Electrician</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Plumber" /><span>Plumber</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Welder" /><span>Welder</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Carpenter" /><span>Carpenter</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Painter" /><span>Painter</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Mason" /><span>Mason</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Roofer" /><span>Roofer</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Tiler" /><span>Tiler</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Steel Fixer" /><span>Steel Fixer</span></label>
+            </div>
+          </div>
+
+          <div class="job-category">
+            <h3>Technical & mechanical</h3>
+            <div class="job-list">
+              <label class="job-item"><input type="checkbox" class="job" value="Mechanic" /><span>Mechanic</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Driver" /><span>Driver</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Boda Rider" /><span>Boda Rider</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="IT Technician" /><span>IT Technician</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Phone Repair" /><span>Phone Repair</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Computer Repair" /><span>Computer Repair</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Solar Technician" /><span>Solar Technician</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="CCTV Installer" /><span>CCTV Installer</span></label>
+            </div>
+          </div>
+
+          <div class="job-category">
+            <h3>Shops & business</h3>
+            <div class="job-list">
+              <label class="job-item"><input type="checkbox" class="job" value="Shop Attendant" /><span>Shop Attendant</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Mobile Money Agent" /><span>Mobile Money Agent</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Sales Person" /><span>Sales Person</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Store Keeper" /><span>Store Keeper</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Stock Controller" /><span>Stock Controller</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Cashier" /><span>Cashier</span></label>
+            </div>
+          </div>
+
+          <div class="job-category">
+            <h3>Domestic & home services</h3>
+            <div class="job-list">
+              <label class="job-item"><input type="checkbox" class="job" value="House Maid" /><span>House Maid</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Cleaner" /><span>Cleaner</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Cook / Chef" /><span>Cook / Chef</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Gardener" /><span>Gardener</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Baby Sitter" /><span>Baby Sitter</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Laundry Worker" /><span>Laundry Worker</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Caregiver" /><span>Caregiver</span></label>
+            </div>
+          </div>
+
+          <div class="job-category">
+            <h3>Beauty, security & office support</h3>
+            <div class="job-list">
+              <label class="job-item"><input type="checkbox" class="job" value="Barber" /><span>Barber</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Hairdresser" /><span>Hairdresser</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Makeup Artist" /><span>Makeup Artist</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Nail Technician" /><span>Nail Technician</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Spa Therapist" /><span>Spa Therapist</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Security Guard" /><span>Security Guard</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Farm Worker" /><span>Farm Worker</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Delivery / Courier" /><span>Delivery / Courier</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Teacher" /><span>Teacher</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Office Assistant" /><span>Office Assistant</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Secretary" /><span>Secretary</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Data Entrant" /><span>Data Entrant</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Call Center Agent" /><span>Call Center Agent</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Messenger" /><span>Messenger</span></label>
+              <label class="job-item"><input type="checkbox" class="job" value="Any Other Work" /><span>Any Other Work</span></label>
+            </div>
+          </div>
         </div>
-    </div>
+        <p class="note">Tip: choose only the jobs you can perform confidently.</p>
+      </section>
 
-    
-
-    <div class="job-category">
-        <h4>Shops & Business</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> Shop Attendant</label>
-            <label class="job-item"><input type="checkbox" class="job"> Mobile Money Agent</label>
-            <label class="job-item"><input type="checkbox" class="job"> Sales Person</label>
-            <label class="job-item"><input type="checkbox" class="job"> Store Keeper</label>
-            <label class="job-item"><input type="checkbox" class="job"> Stock Controller</label>
-            <label class="job-item"><input type="checkbox" class="job"> Cashier</label>
+      <section class="section-card">
+        <h2>Extra details</h2>
+        <p class="section-help">These details help employers understand your readiness.</p>
+        <div class="grid two">
+          <div class="field">
+            <label for="experience">Experience summary</label>
+            <textarea id="experience" placeholder="Briefly describe your experience, strengths or past work"></textarea>
+          </div>
+          <div class="field">
+            <label for="preferredLocation">Preferred work area</label>
+            <input id="preferredLocation" type="text" placeholder="Where would you like to work?" />
+            <div style="height: 16px"></div>
+            <label for="transport">Transport access</label>
+            <select id="transport">
+              <option value="">Select option</option>
+              <option>Yes, I can travel easily</option>
+              <option>Limited transport</option>
+              <option>Only near my location</option>
+            </select>
+          </div>
         </div>
-    </div>
-
-    <div class="job-category">
-        <h4>Domestic & Home Services</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> House Maid</label>
-            <label class="job-item"><input type="checkbox" class="job"> Cleaner</label>
-            <label class="job-item"><input type="checkbox" class="job"> Cook / Chef</label>
-            <label class="job-item"><input type="checkbox" class="job"> Gardener</label>
-            <label class="job-item"><input type="checkbox" class="job"> Baby Sitter</label>
-            <label class="job-item"><input type="checkbox" class="job"> Laundry Worker</label>
-            <label class="job-item"><input type="checkbox" class="job"> Caregiver</label>
+        <div id="statusMessage" class="status"></div>
+        <div class="actions-bar">
+          <button type="submit" class="btn-success">Submit worker profile</button>
+          <a class="btn btn-secondary" href="index2.html">Back to home</a>
         </div>
+      </section>
+    </form>
+  </main>
+
+  <div class="toast-backdrop" id="toastBackdrop">
+    <div class="toast">
+      <div class="pill">Submission received</div>
+      <strong>Profile ready for follow-up</strong>
+      <p>Your details have been checked successfully. Here is a summary of your selected job areas.</p>
+      <ul id="summaryList"></ul>
+      <div class="toast-actions">
+        <button type="button" class="btn-primary" onclick="closeToast()">Close</button>
+        <a class="btn btn-secondary" href="https://wa.me/256771759797" target="_blank" rel="noopener">Contact support</a>
+      </div>
     </div>
+  </div>
 
-    <div class="job-category">
-        <h4>Beauty & Personal Care</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> Barber</label>
-            <label class="job-item"><input type="checkbox" class="job"> Hairdresser</label>
-            <label class="job-item"><input type="checkbox" class="job"> Makeup Artist</label>
-            <label class="job-item"><input type="checkbox" class="job"> Nail Technician</label>
-            <label class="job-item"><input type="checkbox" class="job"> Spa Therapist</label>
-        </div>
-    </div>
+  <footer class="container">
+    <small>Joblink Uganda worker registration • Modernized layout with improved usability and visual consistency</small>
+  </footer>
 
-    <div class="job-category">
-        <h4>Security & Outdoor</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> Security Guard</label>
-            <label class="job-item"><input type="checkbox" class="job"> Bouncer</label>
-            <label class="job-item"><input type="checkbox" class="job"> Farm Worker</label>
-            <label class="job-item"><input type="checkbox" class="job"> Delivery / Courier</label>
-            <label class="job-item"><input type="checkbox" class="job"> Water Supplier</label>
-            <label class="job-item"><input type="checkbox" class="job"> Garbage Collector</label>
-        </div>
-    </div>
+  <script>
+    const form = document.getElementById('workerForm');
+    const statusMessage = document.getElementById('statusMessage');
+    const toastBackdrop = document.getElementById('toastBackdrop');
+    const summaryList = document.getElementById('summaryList');
 
-    <div class="job-category">
-        <h4>Education & Office Work</h4>
-        <div class="job-list">
-            <label class="job-item"><input type="checkbox" class="job"> Teacher</label>
-            <label class="job-item"><input type="checkbox" class="job"> Office Assistant</label>
-            <label class="job-item"><input type="checkbox" class="job"> Secretary</label>
-            <label class="job-item"><input type="checkbox" class="job"> Data Entrant</label>
-            <label class="job-item"><input type="checkbox" class="job"> Call Center Agent</label>
-            <label class="job-item"><input type="checkbox" class="job"> Messenger</label>
-            <label class="job-item"><input type="checkbox" class="job"> Any Other Work</label>
-        </div>
-    </div>
-
-    <button class="submit-btn" onclick="validateForm()">Submit Details</button>
-
-</div>
-
-<a href="file:///C:/Users/Administrator/Desktop/Uganda%20Job-%20link/index2.html" class="bottom-back">Back</a>
-
-<!-- SUCCESS POPUP -->
-<div id="popupSuccess">
-    <div id="popupBoxSuccess">
-        Submitted. Wait for a company call
-    </div>
-</div>
-
-<!-- ERROR POPUP -->
-<div id="popupError">
-    <div id="popupBoxError">
-        Some required fields are still empty
-    </div>
-</div>
-
-<script>
-function validateForm() {
-    let name = document.getElementById("name").value.trim();
-    let age = document.getElementById("age").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let emergency = document.getElementById("emergency").value.trim();
-    let location = document.getElementById("location").value.trim();
-    let education = document.getElementById("education").value;
-    let english = document.getElementById("english").value;
-    let jobs = document.querySelectorAll(".job:checked");
-
-    if (!name || !age || !phone || !emergency || !location || !education || !english || jobs.length === 0) {
-        document.getElementById("popupError").style.display = "flex";
-        setTimeout(() => {
-            document.getElementById("popupError").style.display = "none";
-        }, 2500);
-        return;
+    function setStatus(type, message) {
+      statusMessage.className = 'status ' + type;
+      statusMessage.textContent = message;
     }
 
-    document.getElementById("popupSuccess").style.display = "flex";
-    setTimeout(() => {
-        document.getElementById("popupSuccess").style.display = "none";
-    }, 3000);
-}
-</script>
+    function clearStatus() {
+      statusMessage.className = 'status';
+      statusMessage.textContent = '';
+    }
 
+    function closeToast() {
+      toastBackdrop.style.display = 'none';
+    }
+
+    toastBackdrop.addEventListener('click', function (event) {
+      if (event.target === toastBackdrop) closeToast();
+    });
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      clearStatus();
+
+      const requiredIds = ['name', 'age', 'phone', 'emergency', 'location', 'availability', 'education', 'english'];
+      const missing = requiredIds.some(function (id) {
+        const el = document.getElementById(id);
+        return !el.value.trim();
+      });
+
+      const checkedJobs = Array.from(document.querySelectorAll('.job:checked')).map(function (job) {
+        return job.value;
+      });
+
+      const age = Number(document.getElementById('age').value);
+
+      if (missing) {
+        setStatus('error', 'Please complete all required fields before submitting.');
+        return;
+      }
+
+      if (Number.isNaN(age) || age < 18 || age > 80) {
+        setStatus('error', 'Please enter a valid age between 18 and 80.');
+        return;
+      }
+
+      if (checkedJobs.length === 0) {
+        setStatus('error', 'Please select at least one job category.');
+        return;
+      }
+
+      setStatus('success', 'Profile submitted successfully.');
+      summaryList.innerHTML = '';
+      checkedJobs.slice(0, 8).forEach(function (job) {
+        const item = document.createElement('li');
+        item.textContent = job;
+        summaryList.appendChild(item);
+      });
+
+      if (checkedJobs.length > 8) {
+        const item = document.createElement('li');
+        item.textContent = 'And ' + (checkedJobs.length - 8) + ' more selected job categories';
+        summaryList.appendChild(item);
+      }
+
+      toastBackdrop.style.display = 'flex';
+    });
+  </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
